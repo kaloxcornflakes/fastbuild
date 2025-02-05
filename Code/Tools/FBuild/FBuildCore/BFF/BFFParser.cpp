@@ -1675,6 +1675,16 @@ void BFFParser::CreateBuiltInVariables()
         // TODO:B Add a mechanism to mark variable as read-only
     }
 
+    // _WORKING_DIR_FORWARD_SHASH_
+    {
+        const AStackString<> varName( "._WORKING_DIR_FORWARD_SLASH_" );
+        ASSERT( BFFStackFrame::GetVarAny( AStackString<>( varName.Get() + 1 ) ) == nullptr );
+        AStackString<> path ( FBuild::Get().GetWorkingDir() );
+        path.Replace( BACK_SLASH, FORWARD_SLASH );
+        BFFStackFrame::SetVarString( varName, BFFToken::GetBuiltInToken(), path, &m_BaseStackFrame );
+        // TODO:B Add a mechanism to mark variable as read-only
+    }
+
     // _FASTBUILD_VERSION_STRING_
     {
         AStackString varName( "._FASTBUILD_VERSION_STRING_" );
@@ -1697,6 +1707,17 @@ void BFFParser::CreateBuiltInVariables()
         ASSERT( BFFStackFrame::GetVarAny( AStackString( varName.Get() + 1 ) ) == nullptr );
         AStackString exeName;
         Env::GetExePath( exeName );
+        BFFStackFrame::SetVarString( varName, BFFToken::GetBuiltInToken(), exeName, &m_BaseStackFrame );
+        // TODO:B Add a mechanism to mark variable as read-only
+    }
+
+    // _FASTBUILD_EXE_PATH_FORWARD_SLASH_
+    {
+        const AStackString<> varName( "._FASTBUILD_EXE_PATH_FORWARD_SLASH_" );
+        ASSERT( BFFStackFrame::GetVarAny( AStackString<>( varName.Get() + 1 ) ) == nullptr );
+        AStackString<> exeName;
+        Env::GetExePath( exeName );
+        exeName.Replace( BACK_SLASH, FORWARD_SLASH );
         BFFStackFrame::SetVarString( varName, BFFToken::GetBuiltInToken(), exeName, &m_BaseStackFrame );
         // TODO:B Add a mechanism to mark variable as read-only
     }
@@ -1733,9 +1754,17 @@ void BFFParser::SetBuiltInVariable_CurrentBFFDir( const BFFFile & file )
     relativePath.SetLength( (uint32_t)( lastSlash - relativePath.Get() ) );
 
     // Set the variable - always in the base scope
-    const AStackString varName( "._CURRENT_BFF_DIR_" );
-    BFFStackFrame::SetVarString( varName, BFFToken::GetBuiltInToken(), relativePath, &m_BaseStackFrame );
-    // TODO:B Add a mechanism to mark variable as read-only
+    {
+        const AStackString varName( "._CURRENT_BFF_DIR_" );
+        BFFStackFrame::SetVarString( varName, BFFToken::GetBuiltInToken(), relativePath, &m_BaseStackFrame );
+        // TODO:B Add a mechanism to mark variable as read-only
+    }
+
+    {
+        const AStackString<> varNameForwardSlash( "._CURRENT_BFF_DIR_FORWARD_SLASH_" );
+        relativePath.Replace(BACK_SLASH, FORWARD_SLASH);
+        BFFStackFrame::SetVarString( varNameForwardSlash, BFFToken::GetBuiltInToken(), relativePath, &m_BaseStackFrame );
+    }
 }
 
 // GetUserFunction
