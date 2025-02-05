@@ -44,9 +44,11 @@
 
 # Builtin variables
 "._CURRENT_BFF_DIR_"
+"._CURRENT_BFF_DIR_FORWARD_SLASH_"
 "._FASTBUILD_VERSION_"
 "._FASTBUILD_VERSION_STRING_"
 "._WORKING_DIR_"
+"._WORKING_DIR_FORWARD_SLASH_"
 
 # Other interesting sequences
 "function"
